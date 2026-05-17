@@ -1,0 +1,27 @@
+---
+// === 文章详情页 ===
+// 通过 rest parameter 支持任意深度 slug，渲染 Markdown 正文
+
+import PostLayout from "../../layouts/PostLayout.astro";
+import { getPost, getAdjacentPosts } from "../../lib/content";
+import { getCollection } from "astro:content";
+
+// 静态生成所有文章详情页
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post: currentPost } = Astro.props;
+const { Content, headings } = await currentPost.render();
+
+// 获取前后篇
+const { prev, next } = await getAdjacentPosts(currentPost.slug);
+---
+
+<PostLayout post={currentPost} prevPost={prev} nextPost={next} headings={headings}>
+  <Content />
+</PostLayout>

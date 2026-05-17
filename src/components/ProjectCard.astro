@@ -1,0 +1,75 @@
+---
+// === 作品卡片 ===
+// 封面、名称、简介、技术栈、链接
+
+import type { CollectionEntry } from "astro:content";
+
+export interface Props {
+  project: CollectionEntry<"projects">;
+}
+
+const { project } = Astro.props;
+const { data } = project;
+---
+
+<article class="card overflow-hidden group">
+  <!-- 封面图（可选） -->
+  {data.image && (
+    <div class="aspect-video overflow-hidden">
+      <img
+        src={data.image}
+        alt={data.name}
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        loading="lazy"
+      />
+    </div>
+  )}
+
+  <div class="p-5">
+    <!-- 项目类型 -->
+    <span class="text-xs text-muted bg-gray-100 dark:bg-dark-card px-2 py-0.5 rounded">
+      {data.type}
+    </span>
+
+    <!-- 项目名称 -->
+    <h3 class="text-lg font-bold mt-2 mb-1">{data.name}</h3>
+
+    <!-- 简介 -->
+    {data.description && (
+      <p class="text-sm text-muted mb-3">{data.description}</p>
+    )}
+
+    <!-- 技术栈标签 -->
+    <div class="flex flex-wrap gap-1 mb-4">
+      {data.tags?.map((tag) => (
+        <span class="text-xs px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-500">
+          {tag}
+        </span>
+      ))}
+    </div>
+
+    <!-- 链接 -->
+    <div class="flex gap-2">
+      {data.links?.demo && (
+        <a
+          href={data.links.demo}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm px-3 py-1.5 rounded-lg bg-brand-500 text-white hover:bg-brand-600 transition-colors"
+        >
+          演示
+        </a>
+      )}
+      {data.links?.source && (
+        <a
+          href={data.links.source}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm px-3 py-1.5 rounded-lg border border-brand-500 text-brand-500 hover:bg-brand-500/10 transition-colors"
+        >
+          GitHub
+        </a>
+      )}
+    </div>
+  </div>
+</article>

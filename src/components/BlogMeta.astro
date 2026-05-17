@@ -1,0 +1,35 @@
+---
+// === 文章元信息 ===
+// 日期 + 阅读时长 + 分类/标签的快速展示行
+
+import { formatDate, calculateReadingTime } from "../lib/utils";
+import { SITE } from "../config";
+
+export interface Props {
+  date: Date;
+  tags?: string[];
+  // body 通过 Astro 的 slots 无法直接获取，改用 props 传入
+  readingTime?: number;
+}
+
+const { date, readingTime } = Astro.props;
+---
+
+<div class="flex items-center gap-3 text-sm text-muted">
+  <!-- 日期 -->
+  <time datetime={date.toISOString()}>
+    {formatDate(date)}
+  </time>
+
+  <span aria-hidden="true">·</span>
+
+  <!-- 作者 -->
+  <span>{SITE.author}</span>
+
+  {readingTime && (
+    <>
+      <span aria-hidden="true">·</span>
+      <span>{readingTime} 分钟阅读</span>
+    </>
+  )}
+</div>

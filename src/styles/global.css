@@ -1,0 +1,89 @@
+/* === 全局样式 === */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- CSS 自定义变量 --- */
+:root {
+  --color-bg: #ffffff;
+  --color-card: #f8f9fa;
+  --color-border: #e2e5ea;
+  --color-text: #1a1a2e;
+  --color-muted: #6b7280;
+}
+
+html.dark {
+  --color-bg: #0a0a0f;
+  --color-card: #13131a;
+  --color-border: #1e1e2a;
+  --color-text: #e4e4ed;
+  --color-muted: #8b8ba3;
+}
+
+/* --- 基础重置 --- */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family:
+    "PingFang SC",
+    "Microsoft YaHei",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* --- 暗色模式下代码高亮覆盖 --- */
+html.dark .astro-code {
+  background-color: #0d1117 !important;
+}
+
+/* --- 渐变色文字工具类 --- */
+.text-gradient {
+  @apply bg-gradient-to-r from-brand-500 to-accent-500 bg-clip-text text-transparent;
+}
+
+/* --- 淡化文字工具类（需显式定义） --- */
+@layer utilities {
+  .text-muted {
+    color: var(--color-muted);
+  }
+}
+
+/* --- 卡片通用类 --- */
+.card {
+  @apply rounded-xl border transition-all duration-300;
+  background-color: var(--color-card);
+  border-color: var(--color-border);
+}
+
+.card:hover {
+  @apply -translate-y-1 shadow-lg;
+}
+
+/* --- 科技感 Banner 背景动画 --- */
+.banner-grid {
+  background-image:
+    linear-gradient(
+      rgba(0, 112, 243, 0.03) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0, 112, 243, 0.03) 1px,
+      transparent 1px
+    );
+  background-size: 60px 60px;
+}
+
+/* --- 选中文本样式 --- */
+::selection {
+  background-color: rgba(0, 112, 243, 0.2);
+}

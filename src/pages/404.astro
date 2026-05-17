@@ -1,0 +1,37 @@
+---
+// === 404 页面 ===
+// 自定义错误页，带科技感文案 + 导航
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="页面未找到">
+  <div class="max-w-2xl mx-auto px-4 py-24 text-center">
+    <!-- 404 渐变文字 -->
+    <p class="text-8xl md:text-9xl font-bold text-gradient mb-4">404</p>
+
+    <!-- 提示文案 -->
+    <h1 class="text-2xl font-bold mb-4">
+      好像是走到了知识尚未触及的角落...
+    </h1>
+    <p class="text-muted mb-8">
+      这个页面可能被移除了，或者链接有误。不如回到首页继续探索？
+    </p>
+
+    <!-- 导航 -->
+    <div class="flex justify-center gap-4">
+      <a
+        href="/"
+        class="px-6 py-3 rounded-lg bg-brand-500 text-white font-medium hover:bg-brand-600 transition-colors"
+      >
+        ← 回到首页
+      </a>
+      <a
+        href="/blog"
+        class="px-6 py-3 rounded-lg border border-brand-500 text-brand-500 font-medium hover:bg-brand-500/10 transition-colors"
+      >
+        浏览文章
+      </a>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,34 @@
+---
+// === 社交媒体链接组 ===
+// 图标形式的社交链接，居中显示
+
+import { SOCIAL_LINKS } from "../config";
+---
+
+<div class="flex items-center justify-center gap-4">
+  {SOCIAL_LINKS.map((link) => (
+    <a
+      href={link.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 dark:border-dark-border text-muted hover:text-brand-500 hover:border-brand-500 transition-colors"
+      aria-label={link.label}
+      title={link.label}
+    >
+      <!-- 简单图标占位（后续用 astro-icon 或 lucide 替换）-->
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10" />
+        <path d="M12 2a10 10 0 0 0-10 10 10 10 0 0 0 10 10" />
+      </svg>
+    </a>
+  ))}
+</div>

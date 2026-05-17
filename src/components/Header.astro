@@ -1,0 +1,79 @@
+---
+// === 顶部导航栏 ===
+// 响应式：大屏横排导航，小屏汉堡菜单
+
+import { NAV_LINKS, SITE } from "../config";
+import ThemeToggle from "./ThemeToggle.astro";
+import SearchWidget from "./SearchWidget.astro";
+---
+
+<header class="sticky top-0 z-50 border-b border-gray-200 dark:border-dark-border backdrop-blur-md bg-opacity-80"
+        style="background-color: color-mix(in srgb, var(--color-bg) 85%, transparent)">
+  <nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2 text-xl font-bold hover:text-brand-500 transition-colors">
+      <span class="text-gradient">AI</span>
+      <span>破壁猿</span>
+    </a>
+
+    <!-- 桌面端导航 -->
+    <div class="hidden md:flex items-center gap-6">
+      {NAV_LINKS.map((link) => (
+        <a
+          href={link.href}
+          class="text-sm font-medium text-muted hover:text-brand-500 transition-colors"
+        >
+          {link.label}
+        </a>
+      ))}
+      <SearchWidget />
+      <ThemeToggle />
+    </div>
+
+    <!-- 移动端菜单（通过 JS 控制展开/折叠） -->
+    <div class="flex md:hidden items-center gap-2">
+      <SearchWidget />
+      <ThemeToggle />
+      <button
+        id="menu-toggle"
+        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-card transition-colors"
+        aria-label="打开菜单"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- 移动端菜单面板 -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 dark:border-dark-border bg-white dark:bg-dark-bg">
+    <div class="px-4 py-4 space-y-2">
+      {NAV_LINKS.map((link) => (
+        <a
+          href={link.href}
+          class="block px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-card transition-colors"
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</header>
+
+<script>
+  // 移动端菜单切换
+  const toggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("mobile-menu");
+  if (toggle && menu) {
+    toggle.addEventListener("click", () => {
+      menu.classList.toggle("hidden");
+      toggle.setAttribute(
+        "aria-expanded",
+        menu.classList.contains("hidden") ? "false" : "true"
+      );
+    });
+  }
+</script>

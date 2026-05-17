@@ -1,0 +1,45 @@
+---
+// === 文章目录组件 ===
+// 桌面端侧边固定显示，从文章渲染时提取 headings
+
+import type { MarkdownHeading } from "astro";
+
+// 从 Astro 全局获取 headings（在 PostLayout 中 slot 渲染时可用）
+// 注意：因为 Astro 组件在 PostLayout 中获取不到文章 headings，
+// 所以此组件只作为 TOC 容器占位，实际 TOC 需要在 PostLayout 中
+// 通过 Astro.props.headings 传递后渲染
+
+export interface Props {
+  headings?: MarkdownHeading[];
+}
+
+const { headings = [] } = Astro.props;
+---
+
+{headings.length > 0 && (
+  <nav aria-label="文章目录">
+    <h4 class="text-sm font-bold text-muted mb-3">📑 目录</h4>
+    <ul class="space-y-2 text-sm">
+      {headings
+        .filter((h) => h.depth <= 3)
+        .map((heading) => (
+          <li>
+            <a
+              href={`#${heading.slug}`}
+              class={`block text-muted hover:text-brand-500 transition-colors ${
+                heading.depth === 3 ? "pl-4" : ""
+              }`}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+    </ul>
+  </nav>
+)}
+
+{headings.length === 0 && (
+  <div class="text-sm text-muted">
+    <!-- 无目录时显示占位，避免布局跳动 -->
+  </div>
+)}

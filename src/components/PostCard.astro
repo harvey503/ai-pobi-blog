@@ -1,0 +1,63 @@
+---
+// === 文章卡片 ===
+// 封面图 + 标题 + 日期 + 摘要 + 标签 + 阅读时长
+
+import TagBadge from "./TagBadge.astro";
+import { formatDate, calculateReadingTime } from "../lib/utils";
+import type { CollectionEntry } from "astro:content";
+
+export interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const { data, body } = post;
+
+// 计算阅读时长
+const readingTime = body ? calculateReadingTime(body) : 5;
+
+// 获取摘要
+const excerpt = data.excerpt || body?.slice(0, 120).replace(/[#*`\[\]()>|~\-_]/g, "") + "…" || "";
+---
+
+<article class="card overflow-hidden group">
+  <!-- 封面图（可选） -->
+  {data.cover && (
+    <a href={`/blog/${post.slug}/`} class="block overflow-hidden aspect-video">
+      <img
+        src={data.cover}
+        alt={data.coverAlt || data.title}
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        loading="lazy"
+      />
+    </a>
+  )}
+
+  <!-- 内容区 -->
+  <div class="p-5">
+    <!-- 日期 -->
+    <time class="text-xs text-muted" datetime={data.date.toISOString()}>
+      {formatDate(data.date)}
+    </time>
+
+    <!-- 标题 -->
+    <h2 class="text-lg font-bold mt-1 mb-2 group-hover:text-brand-500 transition-colors">
+      <a href={`/blog/${post.slug}/`}>
+        {data.title}
+      </a>
+    </h2>
+
+    <!-- 摘要 -->
+    <p class="text-sm text-muted line-clamp-2 mb-3">
+      {excerpt}
+    </p>
+
+    <!-- 底部：标签 + 阅读时长 -->
+    <div class="flex items-center justify-between">
+      <div class="flex flex-wrap gap-1">
+        {data.tags?.slice(0, 3).map((tag) => <TagBadge tag={tag} />)}
+      </div>
+      <span class="text-xs text-muted">{readingTime} 分钟</span>
+    </div>
+  </div>
+</article>

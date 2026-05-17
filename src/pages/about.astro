@@ -1,0 +1,103 @@
+---
+// === 关于我 ===
+// 个人背景、技术栈、社交媒体矩阵、联系方式
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SocialLinks from "../components/SocialLinks.astro";
+import { getAllPosts } from "../lib/content";
+import { getSiteRunningDays } from "../lib/utils";
+import { SITE } from "../config";
+
+const allPosts = await getAllPosts();
+const totalPosts = allPosts.length;
+const totalRunningDays = getSiteRunningDays();
+---
+
+<BaseLayout title="关于我">
+  <article class="max-w-3xl mx-auto px-4 py-16">
+    <!-- 头像 + 一句话介绍 -->
+    <div class="text-center mb-12">
+      <!-- 头像占位 -->
+      <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center text-white text-3xl font-bold mb-4">
+        AI
+      </div>
+      <h1 class="text-3xl font-bold mb-2">AI破壁猿</h1>
+      <p class="text-lg text-muted">写代码的人，AI 破壁者</p>
+    </div>
+
+    <!-- 个人简介 -->
+    <section class="mb-12">
+      <h2 class="text-xl font-bold mb-4">📋 个人简介</h2>
+      <div class="prose prose-lg dark:prose-invert max-w-none text-muted">
+        <p>
+          你好，我是 AI破壁猿。一名热爱技术、热衷于 AI 应用与工程实践的开发者。
+        </p>
+        <p>
+          在这里，我用大白话拆解最新的 AI 技术和工具，分享经过实操验证的教程和案例。
+          每一篇文章都有代码支撑，每一个观点都有实测数据。拒绝搬运和拼凑，坚持原创输出。
+        </p>
+        <p>
+          我相信，技术的价值在于被理解和使用。我的目标就是帮你打破 AI 技术的那层「壁」，
+          让更多技术人能够快速上手、学以致用。
+        </p>
+      </div>
+    </section>
+
+    <!-- 技术栈 -->
+    <section class="mb-12">
+      <h2 class="text-xl font-bold mb-4">🛠️ 技术栈</h2>
+      <div class="flex flex-wrap gap-2">
+        {[
+          "Python",
+          "TypeScript",
+          "React",
+          "FastAPI",
+          "LangChain",
+          "LLM 应用开发",
+          "Docker",
+          "PostgreSQL",
+          "Tailwind CSS",
+          "Astro",
+        ].map((skill) => (
+          <span class="px-3 py-1 rounded-full text-sm bg-brand-500/10 text-brand-500 border border-brand-500/20">
+            {skill}
+          </span>
+        ))}
+      </div>
+    </section>
+
+    <!-- 社交媒体矩阵 -->
+    <section class="mb-12">
+      <h2 class="text-xl font-bold mb-4">📡 社交媒体</h2>
+      <SocialLinks />
+    </section>
+
+    <!-- 联系方式 -->
+    <section class="mb-12">
+      <h2 class="text-xl font-bold mb-4">📧 联系我</h2>
+      <p class="text-muted mb-2">商务合作 / 技术交流，欢迎邮件联系：</p>
+      <p class="font-mono text-brand-500">
+        ai.pobi.yuan [at] gmail.com
+      </p>
+    </section>
+
+    <!-- 站点信息 -->
+    <section class="p-6 rounded-xl border border-gray-200 dark:border-dark-border bg-gray-50 dark:bg-dark-card">
+      <h2 class="text-xl font-bold mb-4">📊 站点信息</h2>
+      <div class="grid grid-cols-3 gap-4 text-center">
+        <div>
+          <p class="text-2xl font-bold text-gradient">{totalPosts}</p>
+          <p class="text-sm text-muted mt-1">文章总数</p>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-gradient">{totalRunningDays}</p>
+          <p class="text-sm text-muted mt-1">运行天数</p>
+        </div>
+        <div>
+          <p class="text-2xl font-bold text-gradient">v1.0</p>
+          <p class="text-sm text-muted mt-1">版本</p>
+        </div>
+      </div>
+    </section>
+  </article>
+</BaseLayout>

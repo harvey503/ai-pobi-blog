@@ -1,0 +1,153 @@
+---
+// === 文章详情布局 ===
+// 继承 BaseLayout，增加 TOC、文章头部、前后篇导航、版权声明、底部 CTA
+
+import BaseLayout from "./BaseLayout.astro";
+import BlogMeta from "../components/BlogMeta.astro";
+import TagBadge from "../components/TagBadge.astro";
+import TocAside from "../components/TocAside.astro";
+import { SITE } from "../config";
+import { formatDate } from "../lib/utils";
+import type { CollectionEntry } from "astro:content";
+
+export interface Props {
+  /** 文章条目（含 front-matter 和正文） */
+  post: CollectionEntry<"blog">;
+  /** 上一篇（可选） */
+  prevPost?: CollectionEntry<"blog">;
+  /** 下一篇（可选） */
+  nextPost?: CollectionEntry<"blog">;
+  /** 文章 headings（用于 TOC 目录） */
+  headings?: { depth: number; slug: string; text: string }[];
+}
+
+const { post, prevPost, nextPost, headings = [] } = Astro.props;
+const { data } = post;
+
+// 结构化数据（JSON-LD）
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: data.title,
+  description: data.excerpt,
+  datePublished: data.date.toISOString(),
+  dateModified: data.date.toISOString(),
+  author: {
+    "@type": "Person",
+    name: SITE.author,
+    url: SITE.url,
+  },
+  image: data.cover ? `${SITE.url}${data.cover}` : `${SITE.url}/og-default.png`,
+  url: `${SITE.url}/blog/${post.slug}/`,
+};
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.excerpt}
+  image={data.cover}
+  type="article"
+  publishedTime={data.date.toISOString()}
+  tags={data.tags}
+>
+  <!-- JSON-LD 结构化数据 -->
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <!-- 文章主体 -->
+  <article class="max-w-4xl mx-auto px-4 py-12">
+    <!-- 文章头部：标题 + 元信息 + 标签 -->
+    <header class="mb-10">
+      <h1 class="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+        {data.title}
+      </h1>
+
+      <BlogMeta date={data.date} tags={data.tags} />
+
+      <div class="flex flex-wrap gap-2 mt-4">
+        {data.tags?.map((tag) => <TagBadge tag={tag} />)}
+      </div>
+    </header>
+
+    <!-- 正文区域（桌面端有侧边 TOC → 使用语义 `<article>` 标签包裹） -->
+    <div class="flex gap-8">
+      <!-- 正文 -->
+      <div class="flex-1 min-w-0">
+        <div class="prose prose-lg dark:prose-invert max-w-none">
+          <slot />
+        </div>
+      </div>
+
+      <!-- 桌面端 TOC（隐藏：md 以下不显示） -->
+      <aside class="hidden lg:block w-56 flex-shrink-0">
+        <div class="sticky top-24">
+          <TocAside headings={headings} />
+        </div>
+      </aside>
+    </div>
+
+    <!-- 文章尾巴 -->
+    <footer class="mt-16 pt-8 border-t border-gray-200 dark:border-dark-border">
+      <!-- 标签列表 -->
+      <div class="flex flex-wrap gap-2 mb-8">
+        {data.tags?.map((tag) => <TagBadge tag={tag} />)}
+      </div>
+
+      <!-- 上一篇/下一篇导航 -->
+      <nav class="flex justify-between gap-4 mb-8" aria-label="文章导航">
+        <div class="flex-1">
+          {prevPost && (
+            <a
+              href={`/blog/${prevPost.slug}/`}
+              class="group block p-4 rounded-lg border border-gray-200 dark:border-dark-border hover:border-brand-500 transition-colors"
+            >
+              <span class="text-sm text-muted">← 上一篇</span>
+              <p class="font-medium group-hover:text-brand-500 transition-colors mt-1">
+                {prevPost.data.title}
+              </p>
+            </a>
+          )}
+        </div>
+        <div class="flex-1 text-right">
+          {nextPost && (
+            <a
+              href={`/blog/${nextPost.slug}/`}
+              class="group block p-4 rounded-lg border border-gray-200 dark:border-dark-border hover:border-brand-500 transition-colors"
+            >
+              <span class="text-sm text-muted">下一篇 →</span>
+              <p class="font-medium group-hover:text-brand-500 transition-colors mt-1">
+                {nextPost.data.title}
+              </p>
+            </a>
+          )}
+        </div>
+      </nav>
+
+      <!-- 版权声明 -->
+      <div class="text-sm text-muted p-4 rounded-lg bg-gray-50 dark:bg-dark-card mb-8">
+        <p>© {SITE.author} · 原创内容，转载请注明出处。</p>
+      </div>
+
+      <!-- 底部 CTA -->
+      <div class="text-center p-8 rounded-xl bg-gradient-to-r from-brand-500/5 to-accent-500/5 border border-gray-200 dark:border-dark-border">
+        <h3 class="text-xl font-bold mb-2">关注我，不错过每一篇干货</h3>
+        <p class="text-muted mb-4">
+          扫码关注公众号「AI破壁猿」，获取最新文章推送和独家内容。
+        </p>
+        <div class="flex justify-center gap-4">
+          <a
+            href="/rss.xml"
+            class="px-6 py-2 rounded-lg bg-brand-500 text-white hover:bg-brand-600 transition-colors"
+          >
+            RSS 订阅
+          </a>
+          <a
+            href="/about"
+            class="px-6 py-2 rounded-lg border border-brand-500 text-brand-500 hover:bg-brand-500/10 transition-colors"
+          >
+            了解更多
+          </a>
+        </div>
+      </div>
+    </footer>
+  </article>
+</BaseLayout>

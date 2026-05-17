@@ -1,0 +1,17 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    // 确保 path alias 与 Astro 配置一致
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@content/*": ["content/*"]
+    },
+    // 允许导入 .astro 文件
+    "jsx": "preserve",
+    // 严格模式
+    "strict": true,
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["src/**/*", "content/**/*", "astro.config.mjs"]
+}
